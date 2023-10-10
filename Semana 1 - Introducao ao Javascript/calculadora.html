@@ -1,89 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Simple Calculator</h1>
 
-    
-    <form action="" method="post" onsubmit="calculate()">    
+    <form action="" method="post" onsubmit="calculate()">
+      <label for="numberX">N1</label>
+      <input type="text" placeholder="Insert Number X" id="numberX" />
 
-    <label for="numberX">N1</label>
-    <input type="text" placeholder="Insert Number X" id="numberX">
-    
-    <br>
-    <br>
+      <br />
+      <br />
 
-    <select name="" id="operacao">]
-        <option value=""></option>
-        <option value="+"></option>
-        <option value="-"></option>
-        <option value="/"></option>
-        <option value="*"></option>
-    </select>
-    <br>
-    <br>
+      <select name="" id="operacao">
+        ]
+        <option value="">Selecione uma operação</option>
+        <option value="+">Somar</option>
+        <option value="-">Subtrair</option>
+        <option value="/">Dividir</option>
+        <option value="*">Multiplicar</option>
+      </select>
+      <br />
+      <br />
 
-    <label for="numberY">N2</label>
-    <input type="text" placeholder="Insert Number Y" id="numberY">
+      <label for="numberY">N2</label>
+      <input type="text" placeholder="Insert Number Y" id="numberY" />
 
-    <br>
-    <br>
+      <br />
+      <br />
 
-    <button>Calculate</button>
+      <button>Calculate</button>
 
-    <script>
-        function calculate(){
-            event.preventDefault();
+      <script>
+        function calculate() {
+          event.preventDefault();
 
-            let n1 = parseInt(document.getElementById("numberX").value)
-            let n2 = parseInt(document.getElementById("numberY").value)
+          let n1 = parseFloat(document.getElementById("numberX").value);
+          let n2 = parseFloat(document.getElementById("numberY").value);
 
-            let operacao = document.getElementById("operacao").value
+          let operacao = document.getElementById("operacao").value;
 
-            let resultado;
+          let resultado;
 
-            switch (operacao) {
-                case "+":
-                    resultado = somar(n1,n2)
-                    break;
-                case "-":
-                    resultado = subtrair(n1,n2)
-                    break;
-                case "*":
-                    resultado = multiplicar(n1,n2)
-                    break;
-                case "/":
-                    resultado = dividir(n1,n2)
-                    break;
-                default:
-                    alert("Você precisa selecionar uma operação")
-                    break;
+          switch (operacao) {
+            case "+":
+              resultado = somar(n1, n2);
+              break;
+            case "-":
+              resultado = subtrair(n1, n2);
+              break;
+            case "*":
+              resultado = multiplicar(n1, n2);
+              break;
+            case "/":
+              resultado = dividir(n1, n2);
+              break;
+            default:
+              alert("Você precisa selecionar uma operação");
+              break;
+          }
 
-            }
-
-            alert(`O resultado da soma é ${resultado}`)
-
+          if (!isNaN(resultado)) {
+            alert(`O resultado da operação é: ${resultado}`);
+          } else {
+            alert("Você precisa inserir dois valores válidos (utilize 2 numeros)");
+          }
         }
-        function somar(n1,n2){
 
-            return (n1 + n2)
+        function somar(n1, n2) {
+          return n1 + n2;
         }
 
         function subtrair(n1, n2) {
-
-            return (n1 - n2)
+          return n1 - n2;
         }
-
-    </script>
-
-
+        function multiplicar(n1, n2) {
+          return n1 * n2;
+        }
+        function dividir(n1, n2) {
+          if (n2 == 0) {
+            return "Não é possível dividir por 0";
+          }
+          return n1 / n2;
+        }
+      </script>
     </form>
-
-    
-</body>
+  </body>
 </html>
