@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="" method="post" onsubmit="substituir()">
+      <input
+        type="text"
+        placeholder="insira o seu nome"
+        value=""
+        id="nomeInput"
+      />
+      <button onclick="encurtarNome()">Adicionar nome</button>
+
+      <p>Olá <strong id="nomeStrong"></strong>!</p>
+
+      <input
+        type="text"
+        placeholder="insira um nickname"
+        value=""
+        id="nicknameInput"
+      />
+      <button>Substituir por nickname</button>
+    </form>
+
+    <script>
+      function encurtarNome() {
+        event.preventDefault();
+        let name = document.getElementById("nomeInput").value;
+        let newNickName = name.split(" ");
+
+        document.getElementById("nomeStrong").innerText = newNickName[0];
+      }
+
+      function substituir() {
+        event.preventDefault();
+        document.getElementById("nomeStrong").innerText =
+          document.getElementById("nicknameInput").value;
+      }
+    </script>
+  </body>
+</html>

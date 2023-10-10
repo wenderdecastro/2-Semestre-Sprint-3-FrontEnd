@@ -10,8 +10,8 @@
     <h1>Simple Calculator</h1>
 
     <form action="" method="post" onsubmit="calculate()">
-      <label for="numberX">N1</label>
-      <input type="text" placeholder="Insert Number X" id="numberX" />
+      <label for="numeroX">N1</label>
+      <input type="text" placeholder="Insira o Número X" id="numeroX" />
 
       <br />
       <br />
@@ -27,67 +27,19 @@
       <br />
       <br />
 
-      <label for="numberY">N2</label>
-      <input type="text" placeholder="Insert Number Y" id="numberY" />
+      
+
+      <label for="numeroY">N2</label>
+      <input type="text" placeholder="Insira o Número Y" id="numeroY" />
 
       <br />
-      <br />
+
+      <p>O resultado da operação é: <strong id="result"></strong> </p>
+
 
       <button>Calculate</button>
 
-      <script>
-        function calculate() {
-          event.preventDefault();
-
-          let n1 = parseFloat(document.getElementById("numberX").value);
-          let n2 = parseFloat(document.getElementById("numberY").value);
-
-          let operacao = document.getElementById("operacao").value;
-
-          let resultado;
-
-          switch (operacao) {
-            case "+":
-              resultado = somar(n1, n2);
-              break;
-            case "-":
-              resultado = subtrair(n1, n2);
-              break;
-            case "*":
-              resultado = multiplicar(n1, n2);
-              break;
-            case "/":
-              resultado = dividir(n1, n2);
-              break;
-            default:
-              alert("Você precisa selecionar uma operação");
-              break;
-          }
-
-          if (!isNaN(resultado)) {
-            alert(`O resultado da operação é: ${resultado}`);
-          } else {
-            alert("Você precisa inserir dois valores válidos (utilize 2 numeros)");
-          }
-        }
-
-        function somar(n1, n2) {
-          return n1 + n2;
-        }
-
-        function subtrair(n1, n2) {
-          return n1 - n2;
-        }
-        function multiplicar(n1, n2) {
-          return n1 * n2;
-        }
-        function dividir(n1, n2) {
-          if (n2 == 0) {
-            return "Não é possível dividir por 0";
-          }
-          return n1 / n2;
-        }
-      </script>
+      <script src="./Scripts/calculadora.js"></script>
     </form>
   </body>
 </html>
