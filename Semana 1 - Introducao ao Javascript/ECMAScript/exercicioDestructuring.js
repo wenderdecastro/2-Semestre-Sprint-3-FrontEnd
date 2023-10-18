@@ -28,3 +28,11 @@ filmes.forEach((filme) => {
     ${avaliacao} Estrelas
 `);
 });
+
+filmes.forEach(({nomeFilme, duracao, avaliacao}, i) => {
+  console.log(`
+    ${i + 1}. ${nomeFilme}
+    Duração: ${duracao} 
+    ${avaliacao} Estrelas
+`);
+});
