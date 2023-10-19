@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      EXEMPLO DE CONSUMO DE API UTILIZANDO PROMISES
+    </title>
+  </head>
+  <body>
+    <script>
+      const retorno = fetch("https://viacep.com.br/ws/09930290/json")
+        .then((resp) => {
+          console.log(resp);
+          return resp.json;
+        })
+        .then((dados) => {
+          console.log(dados);
+        })
+        .catch((e) => {
+          console.log("deu ruim");
+        });
+    </script>
+  </body>
+</html>
+
+
+
+
+
