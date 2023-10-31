@@ -1,0 +1,38 @@
+.button{
+    display: block;
+    margin: 1em;
+    border-radius: 1em ;
+    background-color: #e6e6e6;
+    width: 300px;
+    height: 40px;
+    border: none;
+    text-align: center;
+    color: black;
+    min-width: 150px;
+    font-family: 'Montserrat', sans-serif;
+    outline: none;
+    cursor: pointer;
+    text-transform: uppercase;
+
+}
+
+.button:hover{
+    opacity: .8;
+}
+
+.button--success-state{
+    background-color: #aaf07c;
+}
+
+.button--warning-state{
+    background-color: #eef07c;
+}
+
+.button--danger-state{
+    background-color: #f07c7c;
+    color: white;
+}
+
+.button-big{
+    height: 80px;
+}
