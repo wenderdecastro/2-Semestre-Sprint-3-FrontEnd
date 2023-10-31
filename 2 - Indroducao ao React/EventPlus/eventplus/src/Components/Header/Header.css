@@ -1,0 +1,11 @@
+.Header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 85px;
+    width: 100%;
+}
+.logo{
+    height: 80%;
+    max-width: 50%;
+}

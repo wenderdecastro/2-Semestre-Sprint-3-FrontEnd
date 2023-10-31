@@ -1,11 +1,15 @@
-import React from 'react';
+import React from "react";
+import Title from "../../Components/Title/Title";
+
 
 const HomePage = () => {
-    return (
-        <div>
-            <h1>HomePage</h1>
-        </div>
-    );
+  return (
+    <div>
+      <Title 
+        text="Homepage" 
+      />
+    </div>
+  );
 };
 
 export default HomePage;
