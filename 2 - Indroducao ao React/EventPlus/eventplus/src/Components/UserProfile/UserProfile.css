@@ -1,0 +1,11 @@
+.header__login{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    text-align: center;
+}
+.login__link{
+    text-decoration: none;
+    color: black;
+}
+

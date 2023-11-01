@@ -1,11 +1,28 @@
-.Header{
+
+
+.header{
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 85px;
     width: 100%;
+    background-color: white;
+    filter: drop-shadow(0px 0px 15px #0000002c);
 }
-.logo{
-    height: 80%;
+
+.header__logo{
+    height: 25%;
     max-width: 50%;
+}
+
+.header__nav{
+    font-weight: 400;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    width: 40%;
+
+}
+
+.header__link{
+    text-decoration: none;
+    color: black;
 }

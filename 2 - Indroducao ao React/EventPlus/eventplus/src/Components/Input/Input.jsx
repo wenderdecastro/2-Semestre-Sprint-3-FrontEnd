@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Input.css";
 
-const Input = ({ type, placeholder, name, id, value }) => {
+const Input = ({ onChange, type, placeholder, name, id, value }) => {
 
   return (
     <>
@@ -11,7 +11,7 @@ const Input = ({ type, placeholder, name, id, value }) => {
         name={name}
         id={id}
         value={value}
-        // onChange={(e) => { setNumero1(e.target.value) }}
+        onChange={onChange}
       />
       <span>{value}</span>
     </>
