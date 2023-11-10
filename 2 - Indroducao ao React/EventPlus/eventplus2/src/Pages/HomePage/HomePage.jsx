@@ -6,17 +6,17 @@ import VisionSection from "../../Components/VisionSection/VisionSection";
 import ContactSection from "../../Components/ContactSection/ContactSection";
 import NextEvent from "../../Components/NextEvent/NextEvent";
 import Title from "../../Components/Title/Title";
-import axios from "axios"
+import api from "../../Services/api";
 import Container from "../../Components/Container/Container";
+import { dateFormatDbToView } from "../../Utils/stringFunctions";
 
 const HomePage = () => {
   const [nextEvent, setNextEvent] = useState([]);
-  const urlLocal = 'https://localhost:7118/api'
-  
+
   useEffect(() => {
-    async function getNextEvents(){
+    async function getNextEvents() {
       try {
-        const promise = await axios.get(`${urlLocal}/Evento/ListarProximos`)
+        const promise = await api.get("/Evento/ListarProximos")
         const dados = await promise.data
         setNextEvent(dados)
       } catch (error) {
@@ -43,7 +43,7 @@ const HomePage = () => {
                     idEvent={e.idEvento}
                     title={e.nomeEvento}
                     description={e.descricao}
-                    eventDate={e.dataEvento.toString().slice(0,10)} />
+                    eventDate={dateFormatDbToView(e.dataEvento)} />
                 )
               })
             }

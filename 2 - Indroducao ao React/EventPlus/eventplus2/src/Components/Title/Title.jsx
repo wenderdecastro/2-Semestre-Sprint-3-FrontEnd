@@ -1,11 +1,11 @@
 import React from "react";
 import "./Title.css";
 
-const Titulo = ({ titleText, color = "", potatoClass = "" }) => {
+const Titulo = ({ titleText, color = "", className = "" }) => {
   return (
     <div>
       <h1
-        className={`title ${potatoClass}`} style={{ color: color }}>
+        className={`title ${className}`} style={{ color: color }}>
         {titleText}
       </h1>
       <hr
