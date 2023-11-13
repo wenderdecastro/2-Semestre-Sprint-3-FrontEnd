@@ -1,14 +1,12 @@
 import React from 'react';
 import "./ImageIllustrator.css"
+import formDefaultImage from "../../assets/images/default-image.jpeg"
 import tipoEventoImage from "../../assets/images/tipo-evento.svg"
 import tipoUsuarioImage from "../../assets/images/tipo-usuario.svg"
 import loginImage from "../../assets/images/login.svg"
 
-
-
-const ImageIllustrator = ({ altText, imageName, className }) => {
-    const imageResource = undefined;
-
+const ImageIllustrator = ({altText, imageName, className }) => {
+    let imageResource;
     switch (imageName) {
         case 'login':
             imageResource = loginImage;
@@ -17,9 +15,10 @@ const ImageIllustrator = ({ altText, imageName, className }) => {
             imageResource = tipoEventoImage;
             break;
         case 'usuario':
-            imageResource = tipoUsuarioImageImage;
+            imageResource = tipoUsuarioImage;
             break;
         default:
+            imageResource = formDefaultImage;
             break;
     }
 

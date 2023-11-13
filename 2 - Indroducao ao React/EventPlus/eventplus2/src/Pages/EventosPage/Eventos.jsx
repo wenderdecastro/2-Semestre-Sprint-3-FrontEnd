@@ -1,5 +1,5 @@
 import React from "react";
-import "./EventosPage.css";
+import "./Eventos.css";
 import Title from "../../Components/Title/Title";
 
 const EventosPage = () => {

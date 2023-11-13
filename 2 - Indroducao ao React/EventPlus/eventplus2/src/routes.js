@@ -4,8 +4,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 //importacao das paginas
 import HomePage from "./Pages/HomePage/HomePage";
 import LoginPage from "./Pages/Loginpage/LoginPage";
-import TiposEventoPage from "./Pages/TiposEvento/TiposEventoPage";
-import EventosPage from "./Pages/EventosPage/EventosPage";
+import TiposEventoPage from "./Pages/TiposEvento/TiposEvento";
+import EventosPage from "./Pages/EventosPage/Eventos";
 import TestePage from "./Pages/TestePage/TestePage";
 import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";

@@ -5,11 +5,11 @@
 
 @media screen and (min-width: 1200px) {
 
-    .ilustrator-brox {
+    .illustrator-box {
         display: flex;
     }
 
-    .ilustrator-brox__image {
+    .illustrator-box__image {
         width: 100%;
         max-width: 436px;
     }
