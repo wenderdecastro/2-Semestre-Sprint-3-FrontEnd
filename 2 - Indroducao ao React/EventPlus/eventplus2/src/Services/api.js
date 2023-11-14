@@ -1,12 +1,20 @@
-import axios from "axios"
+import axios from "axios";
 
-const apiPort = "7118";
-const urlLocal = `https://localhost:${apiPort}/api`;
-// const externalApiUrl = null;
+// Event Resource Route
+export const eventsResource = '/Evento';
+
+// Next Events Route
+export const nextEventResource = '/Evento/ListarProximos';
+
+// Type Events Route
+export const eventsTypeResource = '/TiposEvento'
+
+const apiPort = '7118';
+const localApiUri = `https://localhost:${apiPort}/api`;
+const externalApiUri  = null;
 
 const api = axios.create({
-    baseURL: urlLocal
-})
+    baseURL: localApiUri
+});
 
-  export default api;
-  
+export default api;
