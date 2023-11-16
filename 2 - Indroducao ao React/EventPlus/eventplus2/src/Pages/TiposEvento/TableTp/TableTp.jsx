@@ -3,7 +3,7 @@ import "./TableTp.css"
 import EditPen from '../../../assets/images/edit-pen.svg'
 import TrashDelete from '../../../assets/images/trash-delete.svg'
 
-const TableTP = (dados, fnDelete = null, fnUpdate = null) => {
+const TableTp = ({ dados, fnDelete = null, fnUpdate = null }) => {
     return (
         <table className='table-data'>
             <thead className="table-data__head">
@@ -16,25 +16,32 @@ const TableTP = (dados, fnDelete = null, fnUpdate = null) => {
             <tbody>
                 {dados.map((tp) => {
                     return (
-                        <tr className="table-data__head-row">
+                        <tr key={tp.idTipoEvento} className="table-data__head-row">
                             <td className="table-data__data table-data__data--big">
-                                Texto do tipo
+                                {tp.titulo}
                             </td>
 
                             <td className="table-data__data table-data__data--little">
-                                <img onClick={() => { fnUpdate() }} className="table-data__icon" src={EditPen} alt="" />
+                                <img
+                                    onClick={(e) => { fnUpdate(e.target.getAttribute('idTipoEvento')) }}
+                                    className="table-data__icon"
+                                    src={EditPen}
+                                    alt="Botão de editar tipo do evento, ilustrado por um lápis." />
                             </td>
 
                             <td className="table-data__data table-data__data--little">
-                                <img onClick={() => { fnDelete() }} className="table-data__icon" src={TrashDelete} alt="" />
+                                <img
+                                    onClick={(e) => { fnDelete(tp.idTipoEvento) }}
+                                    className="table-data__icon"
+                                    src={TrashDelete}
+                                    alt="Botão de deletar tipo do evento, ilustrado por um lixo." />
                             </td>
                         </tr>
                     )
                 })}
-
             </tbody>
         </table>
     );
 };
 
-export default TableTP;
+export default TableTp;

@@ -4,7 +4,7 @@ import Title from "../../Components/Title/Title";
 import Container from "../../Components/Container/Container";
 import MainContent from "../../Components/MainContent/MainContent";
 import ImageIllustrator from "../../Components/ImageIllustrator/ImageIllustrator";
-import TableTp from './TableTp/TableTp';
+import TableTp from './TableTp/TableTp'
 import { Button, Input } from "../../Components/FormComponents/FormComponents";
 import api, { eventsTypeResource } from '../../Services/api'
 
@@ -24,7 +24,7 @@ const TiposEventoPage = () => {
       }
     }
     loadTiposEvento()
-  }, []);
+  }, [tipoEventos]);
 
 
   async function handleSubmit(e) {
@@ -36,8 +36,8 @@ const TiposEventoPage = () => {
       try {
         const retorno = await
           api.post(eventsTypeResource, { "titulo": titulo })
+          setTitulo("")
         console.log('cadastrado com sucesso')
-        setTitulo("")
       } catch (error) {
         console.error("deu ruim na api", error)
       }
@@ -46,8 +46,19 @@ const TiposEventoPage = () => {
 
   }
 
-  function handleDelete(idElement) {
-    alert(`evento id ${idElement}`)
+  async function handleDelete(idElement) {
+
+    if(!window.confirm("Você deseja realmente excluir o objeto?")) return;
+
+    try {
+      const promise = await api.delete(`${eventsTypeResource}/${idElement}`)
+      if(promise.status === 204){
+        console.log('deletado com sucesso')
+      }
+
+    } catch (error) {
+      console.error('deu ruim na api', error)
+    }
   }
   function editActionAbort(idElement) {
     alert(`abortar ação de edição`)
@@ -106,7 +117,11 @@ const TiposEventoPage = () => {
         <section className="lista-eventos-section">
           <Container>
             <Title titleText={"Lista Tipo de Eventos"} color="white" />
-            <TableTp fnUpdate={() => { showUpdateForm() }} fnDelete={() => { handleDelete() }} />
+            <TableTp
+              dados={tipoEventos}
+              fnUpdate={showUpdateForm}
+              fnDelete={handleDelete}
+            />
           </Container>
         </section>
       </MainContent>
