@@ -23,7 +23,7 @@ const TableTp = ({ dados, fnDelete = null, fnUpdate = null }) => {
 
                             <td className="table-data__data table-data__data--little">
                                 <img
-                                    onClick={(e) => { fnUpdate(e.target.getAttribute('idTipoEvento')) }}
+                                    onClick={(e) => { fnUpdate(tp.idTipoEvento) }}
                                     className="table-data__icon"
                                     src={EditPen}
                                     alt="Botão de editar tipo do evento, ilustrado por um lápis." />
