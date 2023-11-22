@@ -33,28 +33,21 @@ const TiposEventoPage = () => {
     loadTiposEvento()
   }, []);
 
-
-  function theMagic() {
-    setNotifyUser({
-      titleNote: "Sucesso",
-      textNote: `Operação concluída com sucesso.`,
-      imgIcon: "Succes",
-      imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
-      showMessage: true
-    });
-  }
-
-
   async function handleSubmit(e) {
     e.preventDefault()
 
     if (titulo.trim().length < 3)
-      alert('Título pequeno demais')
-    else{
+      setNotifyUser({
+        titleNote: "Erro",
+        textNote: `Nome de tipo de evento muito pequeno.`,
+        imgIcon: "Danger",
+        imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+        showMessage: true
+      });
+    else {
       setShowSpinner(true)
       try {
-        const retorno = await
-          api.post(eventsTypeResource, { "titulo": titulo })
+        await api.post(eventsTypeResource, { "titulo": titulo })
         setTitulo("")
         console.log('cadastrado com sucesso')
       } catch (error) {
@@ -71,7 +64,13 @@ const TiposEventoPage = () => {
     try {
       const promise = await api.delete(`${eventsTypeResource}/${idElement}`)
       if (promise.status === 204 || promise.status === 200 || promise.status === 202) {
-        theMagic();
+        setNotifyUser({
+          titleNote: "Sucesso",
+          textNote: `Tipo de Evento excluido com sucesso.`,
+          imgIcon: "Succes",
+          imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+          showMessage: true
+        });
         // Atualiza a variável e roda o useState novamente (que dá um get na api)
 
         // DEsafio fazer uma função para retirar o registro apagado do array tipoEventos
@@ -110,7 +109,13 @@ const TiposEventoPage = () => {
         setTitulo("")
         setUniqueTipoEvento("")
 
-        theMagic();
+        setNotifyUser({
+          titleNote: "Sucesso",
+          textNote: `Operação concluída com sucesso.`,
+          imgIcon: "Succes",
+          imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+          showMessage: true
+        });
 
         const retorno = await api.get(eventsTypeResource)
         setTitulo(retorno.data.titulo)
@@ -141,7 +146,7 @@ const TiposEventoPage = () => {
   return (
     <>
       <Notification {...notifyUser} setNotifyUser={setNotifyUser} />
-      {showSpinner ? <Spinner/> : null}
+      {showSpinner ? <Spinner /> : null}
       <MainContent>
         <section className="cadastro-evento-section">
           {/* title */}
