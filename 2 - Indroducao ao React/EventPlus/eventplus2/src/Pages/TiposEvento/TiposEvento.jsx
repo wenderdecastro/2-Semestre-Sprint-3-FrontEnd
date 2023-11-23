@@ -14,7 +14,7 @@ const TiposEventoPage = () => {
   const [frmEdit, setFrmEdit] = useState(false);
   const [titulo, setTitulo] = useState("");
   const [tipoEventos, setTipoEventos] = useState([]);
-  const [uniqueTipoEvento, setUniqueTipoEvento] = useState({}); //objeto para a atualização de um objeto específico
+  const [editTipoEvento, setEditTipoEvento] = useState({}); //objeto para a atualização de um objeto específico
   const [notifyUser, setNotifyUser] = useState(); //Componente Notification
   const [showSpinner, setShowSpinner] = useState(false)
 
@@ -41,7 +41,7 @@ const TiposEventoPage = () => {
         titleNote: "Erro",
         textNote: `Nome de tipo de evento muito pequeno.`,
         imgIcon: "Danger",
-        imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+        imgAlt: "Imagem de ilustração de erro. Homem segurando um circulo indicando erro",
         showMessage: true
       });
     else {
@@ -49,7 +49,13 @@ const TiposEventoPage = () => {
       try {
         await api.post(eventsTypeResource, { "titulo": titulo })
         setTitulo("")
-        console.log('cadastrado com sucesso')
+        setNotifyUser({
+          titleNote: "Sucesso",
+          textNote: `Tipo de Evento excluido com sucesso.`,
+          imgIcon: "Succes",
+          imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+          showMessage: true
+        });
       } catch (error) {
         console.error("deu ruim na api", error)
       }
@@ -78,6 +84,13 @@ const TiposEventoPage = () => {
         setTipoEventos(buscaEventos.data); //Aqui retorna um array então de boa
       }
     } catch (error) {
+      setNotifyUser({
+        titleNote: "Erro",
+        textNote: `Erro na requisição.`,
+        imgIcon: "Danger",
+        imgAlt: "Imagem de ilustração de erro. Homem segurando um circulo indicando erro",
+        showMessage: true
+      });
       console.error('deu ruim na api', error)
     }
   }
@@ -91,7 +104,7 @@ const TiposEventoPage = () => {
     const tipoEvento = retorno.data;
 
     setTitulo(tipoEvento.titulo);
-    setUniqueTipoEvento(tipoEvento);
+    setEditTipoEvento(tipoEvento);
 
   }
 
@@ -100,14 +113,14 @@ const TiposEventoPage = () => {
   async function handleUpdate(e) {
     e.preventDefault();
 
-    uniqueTipoEvento.titulo = titulo
-    const retorno = await api.put(eventsTypeResource + `/${uniqueTipoEvento.idTipoEvento}`, { "titulo": uniqueTipoEvento.titulo })
+    editTipoEvento.titulo = titulo
+    const retorno = await api.put(eventsTypeResource + `/${editTipoEvento.idTipoEvento}`, { "titulo": editTipoEvento.titulo })
 
     if (retorno.status === 204) {
       setShowSpinner(true)
       try {
         setTitulo("")
-        setUniqueTipoEvento("")
+        setEditTipoEvento("")
 
         setNotifyUser({
           titleNote: "Sucesso",
@@ -140,7 +153,7 @@ const TiposEventoPage = () => {
   function editActionAbort(e) {
     setFrmEdit(false);
     setTitulo("");
-    setUniqueTipoEvento(null)
+    setEditTipoEvento(null)
   }
 
   return (

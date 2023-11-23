@@ -16,17 +16,20 @@ import Spinner from "../../Components/Spinner/Spinner";
 
 const EventosPage = () => {
 
-  // const [frmEdit, setFrmEdit] = useState(false);
+  const [frmEdit, setFrmEdit] = useState(false);
+
   const [notifyUser, setNotifyUser] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const [nomeEvento, setNomeEvento] = useState('');
   const [descricaoEvento, setDescricao] = useState('');
-  const [dataEvento, setDataEvento] = useState(Date());
-  const [tipoEvento, setTipoEventos] = useState([]);
+  const [dataEvento, setDataEvento] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
+
+  const [tipoEvento, setTipoEventos] = useState([]);
   const [eventos, setEventos] = useState([])
+  const [editEvento, setEditEvento] = useState({})
 
-
+  // Carrega os tipos de eventos da API
   async function loadTiposEvento() {
     setShowSpinner(true)
     try {
@@ -42,6 +45,7 @@ const EventosPage = () => {
     setShowSpinner(false)
   }
 
+  // Carrega os eventos da API
   async function loadEventos() {
     setShowSpinner(true)
     try {
@@ -54,6 +58,7 @@ const EventosPage = () => {
     setShowSpinner(false)
   }
 
+  // Lida com a exclusão de um evento pelo ID
   async function handleDelete(idElement) {
 
     if (!window.confirm("Você deseja realmente excluir o objeto?")) return;
@@ -64,7 +69,7 @@ const EventosPage = () => {
         setNotifyUser({
           titleNote: "Sucesso",
           textNote: `Evento excluido com sucesso com sucesso.`,
-          imgIcon: "Succes",
+          imgIcon: "Success",
           imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
           showMessage: true
         });
@@ -87,25 +92,116 @@ const EventosPage = () => {
         titleNote: "Erro",
         textNote: `Nome de tipo de evento muito pequeno.`,
         imgIcon: "Danger",
-        imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+        imgAlt: "Imagem de ilustração de erro. Homem segurando um circulo indicando erro",
         showMessage: true
       });
     else {
       setShowSpinner(true)
       try {
+        setDataEvento(new Date(dataEvento).toJSON())
         await api.post(eventsResource, {
           "nomeEvento": nomeEvento,
-          "descricaoEvento": descricaoEvento,
-          "dataEvento": dataEvento.json(),
-          "idTipoEvento": tipoEvento
+          "descricao": descricaoEvento,
+          "dataEvento": dataEvento,
+          "idTipoEvento": selectedOption,
+          "idInstituicao": 'c6de6b43-fe2a-4b79-bb74-f91b956687fb'
         })
         loadEventos()
-        console.log('cadastrado com sucesso')
+        setNotifyUser({
+          titleNote: "Sucesso",
+          textNote: `Operação concluída com sucesso.`,
+          imgIcon: "Success",
+          imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+          showMessage: true
+        });
       } catch (error) {
+        setNotifyUser({
+          titleNote: "Erro",
+          textNote: `Erro na requisição.`,
+          imgIcon: "Danger",
+          imgAlt: "Imagem de ilustração de erro. Homem segurando um circulo indicando erro",
+          showMessage: true
+        });
         console.error("deu ruim na api", error)
       }
       setShowSpinner(false)
     }
+  }
+
+  async function showUpdateForm(idEvento) {
+    setFrmEdit(true);
+    const retorno = await api.get(eventsResource + `/${idEvento}`);
+
+    const evento = retorno.data;
+
+    setEditEvento(evento)
+    setNomeEvento(evento.nomeEvento);
+    setSelectedOption(evento.idTipoEvento);
+    setDataEvento(new Date(evento.dataEvento).toISOString().slice(0, 10));
+    setDescricao(evento.descricao)
+
+  }
+
+  // Lida com a submissão do formulário para criar um novo evento
+  async function handleUpdate(e) {
+    e.preventDefault();
+
+    editEvento.nomeEvento = nomeEvento;
+    editEvento.descricao = descricaoEvento;
+    editEvento.dataEvento = new Date(dataEvento).toISOString().slice(0, 10);
+    editEvento.tipoEvento = selectedOption;
+
+
+
+    const retorno = await api.put(eventsResource + `/${editEvento.idEvento}`,
+      {
+        "nomeEvento": nomeEvento,
+        "descricao": descricaoEvento,
+        "dataEvento": dataEvento,
+        "idTipoEvento": selectedOption,
+        "idInstituicao": 'c6de6b43-fe2a-4b79-bb74-f91b956687fb'
+      })
+
+    if (retorno.status === 204) {
+      setShowSpinner(true)
+      try {
+        setNomeEvento("")
+        setDescricao("")
+        setDataEvento("")
+        setSelectedOption("")
+
+        setNotifyUser({
+          titleNote: "Sucesso",
+          textNote: `Operação concluída com sucesso.`,
+          imgIcon: "Success",
+          imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+          showMessage: true
+        });
+
+        const retorno = await api.get(eventsResource)
+        setNomeEvento(retorno.data.nomeEvento)
+        editActionAbort();
+
+      } catch (e) {
+        setNotifyUser({
+          titleNote: "Erro",
+          textNote: `Erro na operação, por favor, tente novamente`,
+          imgIcon: "danger",
+          imgAlt: "Imagem de ilustração de erro.",
+          showMessage: true
+        });
+      }
+      loadEventos();
+      setShowSpinner(false)
+    }
+  }
+
+  function editActionAbort(e) {
+    setFrmEdit(false)
+    setNomeEvento("")
+    setDescricao("")
+    setDataEvento("")
+    setSelectedOption("")
   }
 
   useEffect(() => {
@@ -119,7 +215,7 @@ const EventosPage = () => {
       {showSpinner ? <Spinner /> : null}
       <MainContent>
         <section className="cadastro-evento-section">
-          {/* title */}
+
           <Title titleText="Eventos" color="" batataClass="margin-above" />
           <Container>
             <div className="cadastro-evento__box">
@@ -163,17 +259,39 @@ const EventosPage = () => {
                   options={tipoEvento}
                   id={'selectTipoEvento'}
                   required={true}
-                  value={''}
+                  defaultValue={""}
+                  value={selectedOption}
                   manipulationFunction={(e) => { setSelectedOption(e.target.value) }}
 
                 />
-                <p>{selectedOption}</p>
-                <Button
-                  type={'submit'}
-                  name={'cadastrar'}
-                  id={'cadastrar'}
-                  buttonText={'Cadastrar'}
-                />
+                {
+                  !frmEdit ? (
+                    <>
+                      <p>{selectedOption}</p>
+                      <Button
+                        type={'submit'}
+                        name={'cadastrar'}
+                        id={'cadastrar'}
+                        buttonText={'Cadastrar'}
+                      />
+                    </>
+                  )
+                    :
+                    (
+                      <>
+                        <p>{selectedOption}</p>
+                        <Button
+                          buttonText={"Atualizar"}
+                          id={"atualizar"}
+                          name={"atualizar"}
+                          type={"submit"}
+                          manipulationFunction={(e) => {
+                            handleUpdate(e);
+                          }}
+                        />
+                      </>
+                    )
+                }
               </form>
             </div>
           </Container>
@@ -183,7 +301,7 @@ const EventosPage = () => {
             <Title titleText={"Lista de Eventos"} color="white" />
             <TableEv
               dados={eventos}
-              // fnUpdate={showUpdateForm}
+              fnUpdate={showUpdateForm}
               fnDelete={handleDelete}
             />
           </Container>

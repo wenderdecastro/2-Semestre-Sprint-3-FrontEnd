@@ -62,10 +62,10 @@ export const Label = ({
 export const Select = ({
     id,
     manipulationFunction,
-    options,
+    options = [],
     required,
     name,
-    defaultValue,
+    value = 'Selecione: ',
     className = ''
 }) => {
     return (
@@ -73,15 +73,13 @@ export const Select = ({
             name={name}
             id={id}
             required={required}
-            className={`.input-component ${className}`}
-            value={defaultValue}
+            className={`input-component ${className}`}
+            value={value}
             onChange={manipulationFunction}
         >
-            <option value="">selecione</option>
-            {/* options.map() */}
-            {options.map((option) => {
-                return (<option key={option.id} value={option.value}>{option.text}</option>)
-            })}
+            <option value=""></option>
+
+            {options.map((option, index) => <option key={index} value={option.value}>{option.text}</option>)})
         </select>
     )
 
