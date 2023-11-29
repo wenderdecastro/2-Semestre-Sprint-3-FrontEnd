@@ -1,41 +1,14 @@
 import React, { useState } from "react";
-import ImageIllustrator from "../../Components/ImageIllustrator/ImageIllustrator";
+import ImageIllustrator from "../../Components/ImageIlustrator/ImageIlustrator";
 import logo from "../../assets/images/logo-pink.svg";
-import { Input, Button } from "../../Components/FormComponents/FormComponents";
+import { Input, Button } from "../../Components/FomComponents/FormComponents";
 
-import "./LoginPage.css";
-import api, {loginResource} from "../../Services/api";
-import { useContext } from "react";
-import { UserContext, userDecodeToken } from "../../Context/AuthContext";
+import "./Login.css";
 
 const LoginPage = () => {
   
-    const [user, SetUser] = useState({email: "admin@admin.com", senha: "admin123"})
-    const {userData, setUserData} = useContext(UserContext)
+    const [user, SetUser] = useState({email: "teste@gmail.com", senha: ""})
 
-    async function handleSubmit(event) {
-      event.preventDefault();
-
-      if (user.email.length < 3 || user.senha.length < 8) {
-        alert("caracteres insuficientes")
-      }
-      else{
-        try {
-          const promise = await api.post(loginResource, {email: user.email, senha: user.senha})
-          const userFullData = userDecodeToken(promise.data.token)
-          setUserData(userFullData)
-          localStorage.setItem("token", JSON.stringify(userFullData))
-        } catch (error) {
-          alert(error)
-        }
-      }
-
-      
-
-      console.log("dados de login:");
-      console.log(user);
-      
-    }
 
   return (
     <div className="layout-grid-login">
@@ -52,7 +25,7 @@ const LoginPage = () => {
         <div className="frm-login">
           <img src={logo} className="frm-login__logo" alt="" />
 
-          <form className="frm-login__formbox" onSubmit={handleSubmit}>
+          <form className="frm-login__formbox">
             <Input
               className="frm-login__entry"
               type="email"
@@ -60,7 +33,7 @@ const LoginPage = () => {
               name="login"
               required={true}
               value={user.email}
-              manipulationFunction={(e) => {SetUser({...user, email: e.target.value.trim()})}}
+              onChange={(e) => {}}
               placeholder="Username"
             />
             <Input
@@ -70,7 +43,7 @@ const LoginPage = () => {
               name="senha"
               required={true}
               value={user.senha}
-              manipulationFunction={(e) => {SetUser({...user, senha: e.target.value.trim()})}}
+              onChange={(e) => {}}
               placeholder="****"
             />
 
