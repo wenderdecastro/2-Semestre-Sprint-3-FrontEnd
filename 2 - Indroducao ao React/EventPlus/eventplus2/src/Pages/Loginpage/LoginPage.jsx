@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ImageIllustrator from "../../Components/ImageIllustrator/ImageIllustrator";
 import logo from "../../assets/images/logo-pink.svg";
 import { Input, Button } from "../../Components/FormComponents/FormComponents";
@@ -7,11 +7,19 @@ import "./LoginPage.css";
 import api, {loginResource} from "../../Services/api";
 import { useContext } from "react";
 import { UserContext, userDecodeToken } from "../../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   
     const [user, SetUser] = useState({email: "admin@admin.com", senha: "admin123"})
     const {userData, setUserData} = useContext(UserContext)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+      const token = localStorage.getItem("token")
+      if(token === null)
+      navigate("/")
+  }, [])
 
     async function handleSubmit(event) {
       event.preventDefault();
@@ -25,15 +33,13 @@ const LoginPage = () => {
           const userFullData = userDecodeToken(promise.data.token)
           setUserData(userFullData)
           localStorage.setItem("token", JSON.stringify(userFullData))
+          console.log(JSON.stringify(userFullData));
+          navigate("/")
         } catch (error) {
           alert(error)
         }
       }
 
-      
-
-      console.log("dados de login:");
-      console.log(user);
       
     }
 
