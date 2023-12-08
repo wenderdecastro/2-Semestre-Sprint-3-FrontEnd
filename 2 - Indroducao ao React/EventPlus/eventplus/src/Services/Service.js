@@ -9,6 +9,8 @@ export const nextEventResource = '/Evento/ListarProximos';
 // Type Events Route
 export const eventsTypeResource = '/TipoEvento'
 
+export const commentsResource = "/ComentariosEvento"
+
 // Presence Events Route
 
 export const presenceEventResource = "/PresencaEvento"

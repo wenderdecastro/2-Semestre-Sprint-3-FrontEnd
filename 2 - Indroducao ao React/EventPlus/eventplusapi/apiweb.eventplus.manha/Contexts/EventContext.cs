@@ -9,7 +9,7 @@ namespace apiweb.eventplus.manha.Contexts
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<TipoEvento> TipoEvento { get; set; }
         public DbSet<Evento> Evento { get; set; }
-        public DbSet<ComentarioEvento> ComentarioEvento { get; set; }
+        public DbSet<ComentariosEvento> ComentariosEvento { get; set; }
         public DbSet<Instituicao> Instituicao { get; set; }
         public DbSet<PresencaEvento> PresencaEvento { get; set; }
 

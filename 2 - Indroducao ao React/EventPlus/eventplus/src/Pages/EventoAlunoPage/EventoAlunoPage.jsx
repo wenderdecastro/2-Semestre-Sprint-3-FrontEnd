@@ -7,7 +7,7 @@ import Container from "../../components/Container/Container";
 import { Select, SelectMyEvents } from "../../components/FormComponents/FormComponents";
 import Spinner from "../../components/Spinner/Spinner";
 import Modal from "../../components/Modal/Modal";
-import api, { eventsResource, nextEventResource, presenceEventResource } from "../../Services/Service";
+import api, { eventsResource, nextEventResource, presenceEventResource, commentsResource } from "../../Services/Service";
 
 import "./EventoAlunoPage.css";
 import { UserContext } from "../../context/AuthContext";
@@ -36,26 +36,30 @@ const EventoAlunoPage = () => {
         if (tipoEvento === "1") { // os eventos completos
             try {
                 // listar os aventos
-                const request = (await (await api.get(eventsResource)).data);
+                const todoEvento = (await (await api.get(eventsResource)).data);
+                const meuEvento = await (await api.get(`${presenceEventResource}/${userData.UserId}`)).data
+                const eventosMarcados = verificaPresença(todoEvento, meuEvento)
 
-                setEventos(request)
+                setEventos(eventosMarcados);
 
             } catch (error) {
-                alert("Erro em carregar todos os eventos ")
                 console.log(error);
             }
 
         }
-        else { //os eventos do aluno
+        else if (tipoEvento === "2") { //os eventos do aluno
             try {
                 // Listar os eventos do aluno
                 const request = (await (await api.get(`${presenceEventResource}/${userData.UserId}`)).data);
 
                 const arrEventos = [];
 
-                request.forEach(e => {
-                    arrEventos.push(e.evento)
-                });
+                request.map((pr) => {
+                    arrEventos.push({
+                         ...pr.evento, 
+                         situacao: true,
+                        idPresencaEvento: pr.idPresencaEvento})
+                })
 
                 setEventos(arrEventos)
 
@@ -65,29 +69,32 @@ const EventoAlunoPage = () => {
             }
 
         }
+        else {
+            setEventos([]);
+        }
     }
 
     useEffect(() => {
         LoadEvents();
-        if (tipoEvento === "1") {
+    }, [tipoEvento, userData.UserId]);
 
-        }
-        else if (tipoEvento === "2") {
 
-        } else {
-            setEventos([])
-        }
-    }, [tipoEvento]);
+    const verificaPresença = (arrAllEvents, eventsUser) => {
 
-    const verificaPresenca = (arrAllEvents, eventsUser) => {
-        for (let x = 0; x < arrAllEvents.length; x++) {
-            for (let i = 0; i < eventsUser.length; i++) {
-                if (arrAllEvents[x].idEvento === eventsUser[i].idEvento) arrAllEvents[x].situacao = true
-                break;
+        for (let x = 0; x < arrAllEvents.length; x++) { //para cada evento
+
+            for (let i = 0; i < eventsUser.length; i++) { // procurar a corre
+
+                if (arrAllEvents[x].idEvento === eventsUser[i].idEvento) {
+
+                    arrAllEvents[x].situacao = true;
+                    arrAllEvents[x].idPresencaEvento = eventsUser[i].idPresencaEvento
+                    break; //paro de procurar para o evento principal atual
+                }
             }
-
         }
 
+        return arrAllEvents;
     }
 
     // toggle meus eventos ou todos os eventos
@@ -95,21 +102,64 @@ const EventoAlunoPage = () => {
         setTipoEvento(tpEvent);
     }
 
-    async function loadMyComentary(idComentary) {
-        return "????";
-    }
-
-    const showHideModal = () => {
+    const showHideModal = (idEvent) => {
         setShowModal(showModal ? false : true);
+
+        setUserData({...userData, idEvento: idEvent})
     };
 
-    const commentaryRemove = () => {
+    // ler um comentário
+    async function loadMyCommentary(idComentary) {
+        const comentario = await(api.get(commentsResource + "/" + idComentary))
+        console.log(comentario);
+    }
+
+    // Cadastra um comentário
+    async function postMyCommentary(idComentary) {
+        return "Posta um comentário";
+    }
+
+    // remove o comentário
+    async function removeMyCommentary(){
         alert("Remover o comentário");
     };
 
-    function handleConnect() {
-        alert("Desenvolver a função conectar evento");
+    async function handleConnect(idEvento, whatTheFunction, presencaId = null) {
+
+        if (whatTheFunction === "connect") {
+            try {
+                const obj = {
+                    situacao: true,
+                    idUsuario: userData.UserId,
+                    idEvento: idEvento
+                }
+
+                const retorno = await api.post(presenceEventResource, obj)
+
+                if (retorno.status === 201 || retorno.status === 200 || retorno.status === 204) {
+                    LoadEvents();
+                }
+
+
+            } catch (error) {
+                alert(error)
+            }
+            return;
+        }
+
+        try {
+            const unconnected = await api.delete(`${presenceEventResource}/${presencaId}`);
+
+            if (unconnected.status === 201 || unconnected.status === 200 || unconnected.status === 204) {
+                LoadEvents();
+            }
+
+        } catch (error) {
+            alert("Erro na deleção da presença")
+            console.log(error)
+        }
     }
+
     return (
         <>
             {/* Linha para a inclusão da notificação */}
@@ -142,9 +192,7 @@ const EventoAlunoPage = () => {
                     <Table
                         dados={eventos}
                         fnConnect={handleConnect}
-                        fnShowModal={() => {
-                            showHideModal();
-                        }}
+                        fnShowModal={showHideModal}
                     />
                 </Container>
             </MainContent>
@@ -154,10 +202,11 @@ const EventoAlunoPage = () => {
 
             {showModal ? (
                 <Modal
-                    userId={userData.userId}
+                    // userId={userData.userId}
                     showHideModal={showHideModal}
-                    fnDelete={commentaryRemove}
-
+                    fnGet={loadMyCommentary}
+                    fnPost={postMyCommentary}
+                    fnDelete={removeMyCommentary}
                 />
             ) : null}
         </>

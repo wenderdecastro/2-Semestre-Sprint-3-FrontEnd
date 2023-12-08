@@ -59,9 +59,9 @@ namespace apiweb.eventplus.manha.Controllers
                 {
                     _tipoEventoRepository.Delete(id);
                     
-                    return Ok("Tipo de Evento deletado!");
+                    return Ok("Tipo de Evento deletado");
                 }
-                return Ok("O Tipo de evento buscado não aparece!");
+                return Ok("Tipo de evento não encontrado");
             }
             catch (Exception e)
             {

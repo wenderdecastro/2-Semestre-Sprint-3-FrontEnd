@@ -1,26 +1,45 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import trashDelete from "../../assets/images/trash-delete-red.png";
 
 import { Button, Input } from "../FormComponents/FormComponents";
 import "./Modal.css";
+import { UserContext } from "../../context/AuthContext";
 
 const Modal = ({
   modalTitle = "Feedback",
   comentaryText = "Não informado. Não informado. Não informado.",
-  userId = null,
+  // userId = null,
   showHideModal = false,
+  fnGet = null,
+  fnPost = null,
   fnDelete = null,
-  fnNewCommentary = null
+  fnNewCommentary = null,
+  // idEvento = null
 
 }) => {
+
+
+  useEffect(() => { 
+    async function carregarDados() {
+      fnGet();
+    }
+    carregarDados();
+  } , [])
+
+
+
+  const {userData} =  useContext(UserContext)
+  console.clear()
+  console.log(userData);
+
 
   return (
     <div className="modal">
       <article className="modal__box">
-        
+
         <h3 className="modal__title">
           {modalTitle}
-          <span className="modal__close" onClick={()=> showHideModal(true)}>x</span>
+          <span className="modal__close" onClick={() => showHideModal(true)}>x</span>
         </h3>
 
         <div className="comentary">
@@ -39,13 +58,13 @@ const Modal = ({
 
         <Input
           placeholder="Escreva seu comentário..."
-          className="comentary__entry"
+          additionalClass="comentary__entry"
         />
 
         <Button
           textButton={"Comentar"}
-          className="comentary__button"
-          manipulatorFunction={fnNewCommentary} 
+          additionalClass="comentary__button"
+          manipulatorFunction={fnNewCommentary}
         />
       </article>
     </div>

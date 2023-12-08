@@ -94,9 +94,9 @@ namespace apiweb.eventplus.manha.Controllers
                 if (_tipoUsuarioRepository.BuscarPorId(_id) != null)
                 {
                     _tipoUsuarioRepository.Atualizar(_id, tipoUsuario);
-                    return Ok("Usuario Atualizado");
+                    return Ok("Tipo de usuario Atualizado");
                 }
-                return Ok("Usuario não encontrado");
+                return Ok("Tipo de usuario não encontrado");
 
             }
             catch (Exception e)

@@ -22,7 +22,7 @@ namespace apiweb.eventplus.manha.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("apiweb.eventplus.manha.Domains.ComentarioEvento", b =>
+            modelBuilder.Entity("apiweb.eventplus.manha.Domains.ComentariosEvento", b =>
                 {
                     b.Property<Guid>("IdComentarioEvento")
                         .ValueGeneratedOnAdd()
@@ -30,7 +30,7 @@ namespace apiweb.eventplus.manha.Migrations
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("VARCHAR(200)");
 
                     b.Property<bool>("Exibe")
                         .HasColumnType("BIT");
@@ -47,7 +47,7 @@ namespace apiweb.eventplus.manha.Migrations
 
                     b.HasIndex("IdUsuario");
 
-                    b.ToTable("ComentarioEvento");
+                    b.ToTable("ComentariosEvento");
                 });
 
             modelBuilder.Entity("apiweb.eventplus.manha.Domains.Evento", b =>
@@ -195,7 +195,7 @@ namespace apiweb.eventplus.manha.Migrations
                     b.ToTable("Usuario");
                 });
 
-            modelBuilder.Entity("apiweb.eventplus.manha.Domains.ComentarioEvento", b =>
+            modelBuilder.Entity("apiweb.eventplus.manha.Domains.ComentariosEvento", b =>
                 {
                     b.HasOne("apiweb.eventplus.manha.Domains.Evento", "Evento")
                         .WithMany()

@@ -16,7 +16,7 @@ import logo from "../../assets/images/logo-pink.svg";
 
 const LoginPage = () => {
 
-    const [user, setUser] = useState({ email: "admin@admin.com", senha: "admin123" });
+    const [user, setUser] = useState({ email: "", senha: "" });
 
     // Importando as propriedades de nossa context através de um destructuring
     const {userData, setUserData} = useContext(UserContext); //importa os dados globais do usuário

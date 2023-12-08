@@ -63,7 +63,7 @@ builder.Services.AddSwaggerGen(options =>
         TermsOfService = new Uri("https://help.habbo.com.br/hc/pt-br/articles/360011504000-Termos-e-Condi%C3%A7%C3%B5es"),
         Contact = new OpenApiContact
         {
-            Name = "Senai Informática - Turma Manhã André",
+            Name = "Senai Informática - Turma Manhã Wender",
             Url = new Uri("https://github.com/wenderdecastro/2-Semestre-Sprint-3-FrontEnd/tree/main/2%20-%20Indroducao%20ao%20React/EventPlus")
         }
     });
