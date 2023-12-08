@@ -28,6 +28,8 @@ const EventoAlunoPage = () => {
     const [tipoEvento, setTipoEvento] = useState("1"); //código do tipo do Evento escolhido É UMA STRING
     const [showSpinner, setShowSpinner] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [comentario, setComentario] = useState("")
+    const [postComentario, setPostComentario] = useState()
 
     // recupera os dados globais do usuário
     const { userData, setUserData } = useContext(UserContext);
@@ -56,9 +58,10 @@ const EventoAlunoPage = () => {
 
                 request.map((pr) => {
                     arrEventos.push({
-                         ...pr.evento, 
-                         situacao: true,
-                        idPresencaEvento: pr.idPresencaEvento})
+                        ...pr.evento,
+                        situacao: true,
+                        idPresencaEvento: pr.idPresencaEvento
+                    })
                 })
 
                 setEventos(arrEventos)
@@ -77,7 +80,6 @@ const EventoAlunoPage = () => {
     useEffect(() => {
         LoadEvents();
     }, [tipoEvento, userData.UserId]);
-
 
     const verificaPresença = (arrAllEvents, eventsUser) => {
 
@@ -105,23 +107,35 @@ const EventoAlunoPage = () => {
     const showHideModal = (idEvent) => {
         setShowModal(showModal ? false : true);
 
-        setUserData({...userData, idEvento: idEvent})
+        setUserData({ ...userData, idEvento: idEvent })
     };
 
     // ler um comentário
-    async function loadMyCommentary(idComentary) {
-        const comentario = await(api.get(commentsResource + "/" + idComentary))
-        console.log(comentario);
+    async function loadMyCommentary() {
+        const comentario = await api.get(`${commentsResource}/buscarComentarioId?idUsuario=${userData.UserId}&idEvento=${userData.idEvento}`)
+        console.log(comentario.data.descricao);
+        setComentario(comentario.data.descricao)
     }
 
     // Cadastra um comentário
-    async function postMyCommentary(idComentary) {
-        return "Posta um comentário";
+    async function postMyCommentary(idUsuario, idEvento, exibir, descricao) {
+
+        const promise = await api.post(commentsResource, {
+            idUsuario: idUsuario,
+            idEvento: idEvento,
+            exibir: exibir,
+            descricao: descricao
+        })
+
+        if (promise.status == 202) {
+            loadMyCommentary()
+        }
     }
 
     // remove o comentário
-    async function removeMyCommentary(){
-        alert("Remover o comentário");
+    async function removeMyCommentary(idComentario) {
+        const promise = await api.delete(commentsResource)
+        
     };
 
     async function handleConnect(idEvento, whatTheFunction, presencaId = null) {
@@ -207,6 +221,7 @@ const EventoAlunoPage = () => {
                     fnGet={loadMyCommentary}
                     fnPost={postMyCommentary}
                     fnDelete={removeMyCommentary}
+                    comentaryText={comentario}
                 />
             ) : null}
         </>

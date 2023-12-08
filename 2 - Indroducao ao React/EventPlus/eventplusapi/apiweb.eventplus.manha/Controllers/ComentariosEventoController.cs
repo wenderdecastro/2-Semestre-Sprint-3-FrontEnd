@@ -32,12 +32,12 @@ namespace apiweb.eventplus.manha.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetByUserId(Guid idUsuario, Guid IdEvento)
+        [HttpGet("buscarComentarioId")]
+        public IActionResult GetByUserId(Guid idUsuario, Guid idEvento)
         {
             try
             {
-                return Ok(_comentarioRepository.BuscarPorId(idUsuario, IdEvento));
+                return Ok(_comentarioRepository.BuscarPorId(idUsuario, idEvento));
             }
             catch (Exception error)
             {

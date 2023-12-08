@@ -18,9 +18,11 @@ namespace apiweb.eventplus.manha.Repositories
             try
             {
                 return _eventContext.ComentariosEvento
-                    .Where(c => c.IdUsuario == idUsuario && c.IdEvento == idEvento)
                     .Select(c => new ComentariosEvento
                     {
+                        IdComentarioEvento = c.IdComentarioEvento,
+                        IdEvento = c.IdEvento,
+                        IdUsuario = c.IdUsuario,
                         Descricao = c.Descricao,
                         Exibe = c.Exibe,
 
@@ -34,7 +36,7 @@ namespace apiweb.eventplus.manha.Repositories
                             NomeEvento = c.Evento!.NomeEvento,
                         }
 
-                    }).FirstOrDefault();
+                    }).FirstOrDefault(c => c.IdUsuario == idUsuario && c.IdEvento == idEvento)!;
             }
             catch (Exception)
             {

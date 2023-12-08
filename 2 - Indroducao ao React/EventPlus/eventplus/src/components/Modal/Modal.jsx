@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import trashDelete from "../../assets/images/trash-delete-red.png";
 
 import { Button, Input } from "../FormComponents/FormComponents";
@@ -12,23 +12,22 @@ const Modal = ({
   showHideModal = false,
   fnGet = null,
   fnPost = null,
-  fnDelete = null,
-  fnNewCommentary = null,
+  fnDelete = null
   // idEvento = null
 
 }) => {
 
 
-  useEffect(() => { 
+  useEffect(() => {
     async function carregarDados() {
-      fnGet();
+      fnGet(userData.userId, userData.idEvento);
     }
     carregarDados();
-  } , [])
+  }, [])
 
+  const [novoComentario, setNovoComentario] = useState()
 
-
-  const {userData} =  useContext(UserContext)
+  const { userData } = useContext(UserContext)
   console.clear()
   console.log(userData);
 
@@ -59,12 +58,16 @@ const Modal = ({
         <Input
           placeholder="Escreva seu comentário..."
           additionalClass="comentary__entry"
+          manipulatorFunction={(e) => {
+            setNovoComentario(e.target.value);
+          }}
+          value={novoComentario}
         />
 
         <Button
           textButton={"Comentar"}
           additionalClass="comentary__button"
-          manipulatorFunction={fnNewCommentary}
+          manipulatorFunction={() => fnPost(userData.userId, userData.idEvento, true ,novoComentario)}
         />
       </article>
     </div>
