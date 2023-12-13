@@ -92,5 +92,9 @@ namespace apiweb.eventplus.manha.Repositories
         {
             return _eventContext.Evento.Where(z => z.DataEvento > DateTime.Now).ToList();
         }
+        public List<Evento> ListarAnteriores()
+        {
+            return _eventContext.Evento.Where(z => z.DataEvento < DateTime.Now).ToList();
+        }
     }
 }

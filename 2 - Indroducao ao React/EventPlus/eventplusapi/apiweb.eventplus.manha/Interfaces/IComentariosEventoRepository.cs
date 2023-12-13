@@ -8,5 +8,7 @@ namespace apiweb.eventplus.manha.Interfaces
         void Deletar(Guid id);
         List<ComentariosEvento> Listar();
         ComentariosEvento BuscarPorId(Guid idUsuario, Guid IdEvento);
+
+        List<ComentariosEvento> ListarExibe();
     }
 }

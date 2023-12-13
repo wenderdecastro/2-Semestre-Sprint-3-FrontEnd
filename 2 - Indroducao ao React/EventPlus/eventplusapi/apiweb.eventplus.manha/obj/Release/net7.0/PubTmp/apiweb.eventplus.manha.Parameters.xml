@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="eventplusapi" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\57267874800\\Desktop\\Sprint\ 3\ ,\ 2º\ SEM\ -\ Frontend\\2\ -\ Indroducao\ ao\ React\\EventPlus\\eventplusapi\\apiweb\.eventplus\.manha\\obj\\Release\\net7\.0\\PubTmp\\Out\\$" />
+  </parameter>
+</parameters>

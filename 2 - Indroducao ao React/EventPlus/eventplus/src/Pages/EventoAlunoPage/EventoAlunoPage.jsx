@@ -7,7 +7,7 @@ import Container from "../../components/Container/Container";
 import { Select, SelectMyEvents } from "../../components/FormComponents/FormComponents";
 import Spinner from "../../components/Spinner/Spinner";
 import Modal from "../../components/Modal/Modal";
-import api, { eventsResource, nextEventResource, presenceEventResource, commentsResource } from "../../Services/Service";
+import api, { commentEventResource, eventsResource, presenceEventResource } from "../../Services/Service";
 
 import "./EventoAlunoPage.css";
 import { UserContext } from "../../context/AuthContext";
@@ -23,16 +23,30 @@ const EventoAlunoPage = () => {
         { value: 2, text: "Meus eventos" },
     ]);
 
+
+
     const [notifyUser, setNotifyUser] = useState(); //Componente Notification
 
     const [tipoEvento, setTipoEvento] = useState("1"); //código do tipo do Evento escolhido É UMA STRING
     const [showSpinner, setShowSpinner] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [comentario, setComentario] = useState("")
-    const [postComentario, setPostComentario] = useState()
 
     // recupera os dados globais do usuário
     const { userData, setUserData } = useContext(UserContext);
+    // ID do Evento
+    const [idEvento, setIdEvento] = useState();
+    // Texto do comentário
+    const [comentario, setComentario] = useState();
+    // Texto do novo comentário a ser postado
+    const [novoComentario, setNovoComentario] = useState("");
+
+    // Id do comentário cadastrado
+    const [idComentario, setIdComentario] = useState();
+
+    useEffect(() => {
+        LoadEvents();
+    }, [tipoEvento, userData.UserId]);
+
 
     async function LoadEvents() {
         if (tipoEvento === "1") { // os eventos completos
@@ -77,9 +91,60 @@ const EventoAlunoPage = () => {
         }
     }
 
-    useEffect(() => {
-        LoadEvents();
-    }, [tipoEvento, userData.UserId]);
+
+    function Aviso(key) { // 1 = Comentário pelo menos 3 char, 2 = exclusão, 3 = cadastro, 4= Atualização
+
+        switch (key) {
+
+            case 1:
+                setNotifyUser({
+                    titleNote: "Aviso",
+                    textNote: `O Comentário deve conter pelo menos 3 caracteres`,
+                    imgIcon: "warning",
+                    imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+                    showMessage: true
+                });
+                break;
+            case 2:
+                setNotifyUser({
+                    titleNote: "Sucesso",
+                    textNote: `Comentário excluído com sucesso`,
+                    imgIcon: "success",
+                    imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+                    showMessage: true
+                });
+                break;
+            case 3:
+                setNotifyUser({
+                    titleNote: "Sucesso",
+                    textNote: `Comentário cadastrado com sucesso`,
+                    imgIcon: "success",
+                    imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+                    showMessage: true
+                });
+                break;
+            case 4:
+                setNotifyUser({
+                    titleNote: "Sucesso",
+                    textNote: `Comentário atualizado com sucesso`,
+                    imgIcon: "success",
+                    imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+                    showMessage: true
+                });
+                break;
+            default:
+                setNotifyUser({
+                    titleNote: "Aviso",
+                    textNote: `${key}`,
+                    imgIcon: "warning",
+                    imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+                    showMessage: true
+                });
+                break;
+        }
+    }
+
+
 
     const verificaPresença = (arrAllEvents, eventsUser) => {
 
@@ -104,38 +169,63 @@ const EventoAlunoPage = () => {
         setTipoEvento(tpEvent);
     }
 
-    const showHideModal = (idEvent) => {
+    const showHideModal = (idEvento) => {
+
         setShowModal(showModal ? false : true);
 
-        setUserData({ ...userData, idEvento: idEvent })
+        if (showModal) { //Um if para quando fecharmos o modal não fazer a requisição novamente
+            return;
+        }
+        setUserData({
+            ...userData,
+            idEvento: idEvento
+        })
+
+        setIdEvento(idEvento)
+
+        loadMyCommentary(idEvento);
     };
 
     // ler um comentário
-    async function loadMyCommentary() {
-        const comentario = await api.get(`${commentsResource}/buscarComentarioId?idUsuario=${userData.UserId}&idEvento=${userData.idEvento}`)
-        console.log(comentario.data.descricao);
-        setComentario(comentario.data.descricao)
+    async function loadMyCommentary(id) {
+
+        const request = await api.get(`${commentEventResource}/BuscarPorIdUsuario?idAluno=${userData.UserId}&idEvento=${id}`)
+
+        setComentario(request.data.descricao)
+        setIdComentario(request.data.idComentarioEvento)
     }
 
     // Cadastra um comentário
-    async function postMyCommentary(idUsuario, idEvento, exibir, descricao) {
+    async function postMyCommentary() {
 
-        const promise = await api.post(commentsResource, {
-            idUsuario: idUsuario,
-            idEvento: idEvento,
-            exibir: exibir,
-            descricao: descricao
-        })
+        const request = api.post(commentEventResource, {
+            descricao: novoComentario,
+            exibe: true,
+            idUsuario: userData.UserId,
+            idEvento: idEvento
+        });
 
-        if (promise.status == 202) {
-            loadMyCommentary()
-        }
+        const chamado = await api.get(`${commentEventResource}/BuscarPorIdUsuario?idAluno=${userData.UserId}&idEvento=${idEvento}`)
+
+        setComentario(novoComentario);
+        setNovoComentario("");
+        Aviso(3);
     }
 
     // remove o comentário
-    async function removeMyCommentary(idComentario) {
-        const promise = await api.delete(commentsResource)
-        
+    async function removeMyCommentary() {
+
+        try {
+            const request = await api.delete(`${commentEventResource}/${idComentario}`)
+
+            setComentario("Comentário Deletado!")
+
+            Aviso(2);
+
+        } catch (error) {
+            Aviso("Não há nada para se deletar!")
+        }
+
     };
 
     async function handleConnect(idEvento, whatTheFunction, presencaId = null) {
@@ -216,12 +306,17 @@ const EventoAlunoPage = () => {
 
             {showModal ? (
                 <Modal
-                    // userId={userData.userId}
+                    userId={userData.userId}
                     showHideModal={showHideModal}
-                    fnGet={loadMyCommentary}
                     fnPost={postMyCommentary}
                     fnDelete={removeMyCommentary}
                     comentaryText={comentario}
+
+                    fnGet={loadMyCommentary}
+
+                    newComentary={novoComentario}
+                    setNewComentary={setNovoComentario}
+
                 />
             ) : null}
         </>

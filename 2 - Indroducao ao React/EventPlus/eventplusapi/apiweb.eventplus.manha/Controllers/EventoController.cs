@@ -31,6 +31,19 @@ namespace apiweb.eventplus.manha.Controllers
             }
         }
 
+        [HttpGet("ListarAnteriores")]
+        public IActionResult ListarAnteriores()
+        {
+            try
+            {
+                return Ok(_eventoRepository.ListarAnteriores());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpGet]
         public IActionResult Get()
         {

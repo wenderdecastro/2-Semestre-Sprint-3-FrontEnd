@@ -11,5 +11,7 @@ namespace apiweb.eventplus.manha.Interfaces
         void Atualizar(Guid id, Evento evento);
 
         List<Evento> ListarProximos();
+
+        List<Evento> ListarAnteriores();
     }
 }

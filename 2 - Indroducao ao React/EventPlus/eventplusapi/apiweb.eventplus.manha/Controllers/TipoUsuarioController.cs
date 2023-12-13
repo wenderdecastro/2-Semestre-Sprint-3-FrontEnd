@@ -71,13 +71,13 @@ namespace apiweb.eventplus.manha.Controllers
             }
         }
 
-        [HttpPost("{id}")]
+        [HttpGet("{tuid}")]
         [Authorize(Roles = "Administrador, Aluno")]
-        public IActionResult GetWithId(Guid id)
+        public IActionResult GetWithId(Guid tuid)
         {
             try
             {
-                return Ok(_tipoUsuarioRepository.BuscarPorId(id));
+                return Ok(_tipoUsuarioRepository.BuscarPorId(tuid));
             }
             catch (Exception e)
             {

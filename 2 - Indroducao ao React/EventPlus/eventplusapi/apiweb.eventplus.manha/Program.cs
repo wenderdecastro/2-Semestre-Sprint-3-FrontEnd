@@ -1,3 +1,4 @@
+using Microsoft.Azure.CognitiveServices.ContentModerator;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -68,7 +69,8 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 
-
+    //Adicionar dentro de AddSwaggerGen
+    options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     //BLOCO DE CÓDIGO PARA APARECER UM INPUT DE AUTENTICAÇÃO NO SWAGGER
     //NESSE INPUT NÓS DEVEMOS SEMPRE COLOCAR UM "Bearer" ANTES DE COLOCAR UM TOKEN
 
@@ -109,19 +111,38 @@ builder.Services.AddCors(options =>
         policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     }
     );
+
 });
 
+//Configuração do serviço de moderação de conteúdo - Azure
+//Chave e Endpoint obtidos na azure.
+builder.Services.AddSingleton(provider => new ContentModeratorClient(
+    new ApiKeyServiceClientCredentials("89479ddb288b48d2b95861b11531c374"))
+{
+    Endpoint = "https://eventpluscontentmoderator.cognitiveservices.azure.com/"
+}
+);
 
 
-var app = builder.Build();
+
+
+var app = builder.Build(); 
 
 //Começa a configuração do Swagger
+//Alterar dados do Swagger para a seguinte configuração
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
 
+app.UseSwagger(options =>
+{
+    options.SerializeAsV2 = true;
+});
+
+app.UseSwaggerUI();
+
+//Para atender à interface do usuário do Swagger na raiz do aplicativo
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
@@ -129,6 +150,10 @@ app.UseSwaggerUI(options =>
 });
 
 app.UseCors("MyPolicy");
+
+
+
+app.UseRouting();
 
 //Finaliza a configuração Swagger
 app.MapControllers();

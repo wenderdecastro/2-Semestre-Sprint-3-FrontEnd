@@ -90,6 +90,38 @@ namespace apiweb.eventplus.manha.Repositories
                 throw;
             }
         }
+        public List<ComentariosEvento> ListarExibe()
+        {
+
+            try
+            {
+                return _eventContext.ComentariosEvento
+                    .Select(c => new ComentariosEvento
+                {
+                    IdComentarioEvento = c.IdComentarioEvento,
+                    IdEvento = c.IdEvento,
+                    IdUsuario = c.IdUsuario,
+                    Descricao = c.Descricao,
+                    Exibe = c.Exibe,
+
+                    Usuario = new Usuario
+                    {
+                        Nome = c.Usuario!.Nome
+                    },
+
+                    Evento = new Evento
+                    {
+                        NomeEvento = c.Evento!.NomeEvento,
+                    }
+
+                }).Where(c => c.Exibe == true).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
     }
 }

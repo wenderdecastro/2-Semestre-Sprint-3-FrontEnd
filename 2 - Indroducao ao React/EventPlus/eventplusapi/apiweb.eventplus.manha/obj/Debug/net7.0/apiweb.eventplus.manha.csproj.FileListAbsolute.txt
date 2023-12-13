@@ -654,3 +654,6 @@ C:\Users\57267874800\Desktop\Sprint 3 , 2º SEM - Frontend\2 - Indroducao ao Rea
 C:\Users\57267874800\Desktop\Sprint 3 , 2º SEM - Frontend\2 - Indroducao ao React\EventPlus\eventplusapi\apiweb.eventplus.manha\obj\Debug\net7.0\apiweb.eventplus.manha.pdb
 C:\Users\57267874800\Desktop\Sprint 3 , 2º SEM - Frontend\2 - Indroducao ao React\EventPlus\eventplusapi\apiweb.eventplus.manha\obj\Debug\net7.0\apiweb.eventplus.manha.genruntimeconfig.cache
 C:\Users\57267874800\Desktop\Sprint 3 , 2º SEM - Frontend\2 - Indroducao ao React\EventPlus\eventplusapi\apiweb.eventplus.manha\obj\Debug\net7.0\ref\apiweb.eventplus.manha.dll
+C:\Users\57267874800\Desktop\Sprint 3 , 2º SEM - Frontend\2 - Indroducao ao React\EventPlus\eventplusapi\apiweb.eventplus.manha\bin\Debug\net7.0\Microsoft.Azure.CognitiveServices.ContentModerator.dll
+C:\Users\57267874800\Desktop\Sprint 3 , 2º SEM - Frontend\2 - Indroducao ao React\EventPlus\eventplusapi\apiweb.eventplus.manha\bin\Debug\net7.0\Microsoft.Rest.ClientRuntime.dll
+C:\Users\57267874800\Desktop\Sprint 3 , 2º SEM - Frontend\2 - Indroducao ao React\EventPlus\eventplusapi\apiweb.eventplus.manha\bin\Debug\net7.0\Microsoft.Rest.ClientRuntime.Azure.dll
