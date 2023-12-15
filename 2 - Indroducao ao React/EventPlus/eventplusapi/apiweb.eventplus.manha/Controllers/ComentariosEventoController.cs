@@ -75,12 +75,40 @@ namespace apiweb.eventplus.manha.Controllers
                 return BadRequest(error);
             }
         }
-        [HttpGet("GetExibe")]
-        public IActionResult GetExibe()
+        [HttpGet("GetIA")]
+        public IActionResult GetIA(Guid id)
         {
             try
             {
-                return Ok(_comentarioRepository.ListarExibe());
+                return Ok(_comentarioRepository.ListarIA());
+            }
+            catch (Exception error)
+            {
+
+                return BadRequest(error);
+            }
+        }
+
+        [HttpGet("GetExibe/{id}")]
+        public IActionResult GetExibe(Guid id)
+        {
+            try
+            {
+                return Ok(_comentarioRepository.ListarExibe(id));
+            }
+            catch (Exception error)
+            {
+
+                return BadRequest(error);
+            }
+        }
+
+        [HttpGet("GetAll/{id}")]
+        public IActionResult GetAllByEvent(Guid id)
+        {
+            try
+            {
+                return Ok(_comentarioRepository.ListarTodos(id));
             }
             catch (Exception error)
             {

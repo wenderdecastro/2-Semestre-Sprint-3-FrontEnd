@@ -9,6 +9,6 @@ namespace apiweb.eventplus.manha.Interfaces
         List<ComentariosEvento> Listar();
         ComentariosEvento BuscarPorId(Guid idUsuario, Guid IdEvento);
 
-        List<ComentariosEvento> ListarExibe();
+        List<ComentariosEvento> ListarIA();
     }
 }

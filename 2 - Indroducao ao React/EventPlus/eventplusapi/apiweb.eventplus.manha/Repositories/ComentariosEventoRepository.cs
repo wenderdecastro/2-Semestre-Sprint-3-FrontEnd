@@ -96,7 +96,7 @@ namespace apiweb.eventplus.manha.Repositories
                 throw;
             }
         }
-        public List<ComentariosEvento> ListarExibe()
+        public List<ComentariosEvento> ListarIA()
         {
 
             try
@@ -129,6 +129,74 @@ namespace apiweb.eventplus.manha.Repositories
                 throw;
             }
         }
+        public List<ComentariosEvento> ListarExibe(Guid id)
+        {
+
+            try
+            {
+                return _eventContext.ComentariosEvento
+                    .Select(c => new ComentariosEvento
+                    {
+                        IdComentarioEvento = c.IdComentarioEvento,
+                        IdEvento = c.IdEvento,
+                        IdUsuario = c.IdUsuario,
+                        Descricao = c.Descricao,
+                        Exibe = c.Exibe,
+
+                        Usuario = new Usuario
+                        {
+                            Nome = c.Usuario!.Nome
+                        },
+
+                        Evento = new Evento
+                        {
+                            NomeEvento = c.Evento!.NomeEvento,
+                        }
+
+                    }).Where(c => c.Exibe == true && c.IdEvento == id).ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.InnerException);
+                throw;
+            }
+        }
+
+        public List<ComentariosEvento> ListarTodos(Guid id)
+        {
+
+            try
+            {
+                return _eventContext.ComentariosEvento
+                    .Select(c => new ComentariosEvento
+                    {
+                        IdComentarioEvento = c.IdComentarioEvento,
+                        IdEvento = c.IdEvento,
+                        IdUsuario = c.IdUsuario,
+                        Descricao = c.Descricao,
+                        Exibe = c.Exibe,
+
+                        Usuario = new Usuario
+                        {
+                            Nome = c.Usuario!.Nome
+                        },
+
+                        Evento = new Evento
+                        {
+                            NomeEvento = c.Evento!.NomeEvento,
+                        }
+
+                    }).Where(c => c.IdEvento == id).ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.InnerException);
+                throw;
+            }
+        }
+
 
     }
 }

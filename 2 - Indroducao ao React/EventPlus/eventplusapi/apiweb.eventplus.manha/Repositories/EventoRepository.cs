@@ -1,6 +1,7 @@
 ﻿using apiweb.eventplus.manha.Contexts;
 using apiweb.eventplus.manha.Domains;
 using apiweb.eventplus.manha.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace apiweb.eventplus.manha.Repositories
 {
