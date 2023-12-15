@@ -37,53 +37,10 @@
         }
       }
     },
-    "/api/ComentariosEvento": {
+    "/api/ComentariosEvento/GetAll": {
       "get": {
         "tags": [
           "ComentariosEvento"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "ComentariosEvento"
-        ],
-        "consumes": [
-          "application/json",
-          "text/json",
-          "application/*+json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/definitions/ComentariosEvento"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "ComentariosEvento"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "IdComentario",
-            "type": "string",
-            "format": "uuid",
-            "collectionFormat": "multi"
-          }
         ],
         "responses": {
           "200": {
@@ -123,6 +80,53 @@
             "type": "string",
             "format": "uuid",
             "collectionFormat": "multi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ComentariosEvento": {
+      "post": {
+        "tags": [
+          "ComentariosEvento"
+        ],
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ComentariosEvento"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ComentariosEvento/{id}": {
+      "delete": {
+        "tags": [
+          "ComentariosEvento"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
           }
         ],
         "responses": {

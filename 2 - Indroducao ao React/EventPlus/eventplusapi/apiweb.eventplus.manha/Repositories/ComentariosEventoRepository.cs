@@ -1,6 +1,7 @@
 ﻿using apiweb.eventplus.manha.Contexts;
 using apiweb.eventplus.manha.Domains;
 using apiweb.eventplus.manha.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace apiweb.eventplus.manha.Repositories
 {
@@ -38,8 +39,10 @@ namespace apiweb.eventplus.manha.Repositories
 
                     }).FirstOrDefault(c => c.IdUsuario == idUsuario && c.IdEvento == idEvento)!;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.InnerException);
                 throw;
             }
         }
@@ -51,9 +54,10 @@ namespace apiweb.eventplus.manha.Repositories
                 _eventContext.ComentariosEvento.Add(comentarioEvento);
                 _eventContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.InnerException);
             }
         }
 
@@ -71,9 +75,10 @@ namespace apiweb.eventplus.manha.Repositories
 
                 _eventContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.InnerException);
             }
         }
 
@@ -84,9 +89,10 @@ namespace apiweb.eventplus.manha.Repositories
             {
                 return _eventContext.ComentariosEvento.ToList();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.InnerException);
                 throw;
             }
         }
@@ -116,9 +122,10 @@ namespace apiweb.eventplus.manha.Repositories
 
                 }).Where(c => c.Exibe == true).ToList();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.InnerException);
                 throw;
             }
         }

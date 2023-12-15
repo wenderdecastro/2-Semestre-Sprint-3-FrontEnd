@@ -15,14 +15,14 @@ namespace apiweb.eventplus.manha.Controllers
     public class ComentariosEventoController : ControllerBase
     {
 
-        private readonly IComentariosEventoRepository _comentarioRepository;
-        private readonly IContentModeratorClient _contentModeratorClient;
+        private readonly ContentModeratorClient _contentModeratorClient;
 
-        public ComentariosEventoController(IComentariosEventoRepository comentarioRepository, IContentModeratorClient contentModeratorClient)
+        public ComentariosEventoController(ContentModeratorClient contentModeratorClient)
         {
-            _comentarioRepository = comentarioRepository;
             _contentModeratorClient = contentModeratorClient;
         }
+
+        ComentariosEventoRepository _comentarioRepository = new ComentariosEventoRepository();
 
         [HttpPost("ComentarioIA")]
         public async Task<IActionResult> PostIA(ComentariosEvento novoComentario)
@@ -62,8 +62,8 @@ namespace apiweb.eventplus.manha.Controllers
         }
 
         
-        [HttpGet]
-        public IActionResult Get()
+        [HttpGet("GetAll")]
+        public IActionResult GetAll()
         {
             try
             {
@@ -118,12 +118,12 @@ namespace apiweb.eventplus.manha.Controllers
             }
         }
 
-        [HttpDelete]
-        public IActionResult Deletar(Guid IdComentario)
+        [HttpDelete("{id}")]
+        public IActionResult Deletar(Guid id)
         {
             try
             {
-                _comentarioRepository.Deletar(IdComentario);
+                _comentarioRepository.Deletar(id);
                 return StatusCode(202, "comentario criado");
             }
             catch (Exception error)
