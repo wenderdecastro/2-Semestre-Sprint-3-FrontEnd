@@ -36,7 +36,7 @@ namespace apiweb.eventplus.manha.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Listar()
         {
             try
             {

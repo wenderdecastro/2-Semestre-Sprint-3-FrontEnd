@@ -6,6 +6,7 @@ namespace apiweb.eventplus.manha.Interfaces
     {
         void Cadastrar(Usuario usuario);
         Usuario BuscarPorId(Guid id);
+        List<Usuario> Listar();
 
         Usuario BuscarPorEmailSenha(string email, string senha);
     }
