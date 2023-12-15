@@ -7,7 +7,7 @@ import Container from "../../components/Container/Container";
 import { Select, SelectMyEvents } from "../../components/FormComponents/FormComponents";
 import Spinner from "../../components/Spinner/Spinner";
 import Modal from "../../components/Modal/Modal";
-import api, { comentariosEventoResource, eventsResource, nextEventResource, presencesEventsResource } from "../../Services/Service";
+import api, { commentEventResource, eventsResource, presenceEventResource } from "../../Services/Service";
 
 import "./EventoAlunoPage.css";
 import { UserContext } from "../../context/AuthContext";
@@ -23,45 +23,60 @@ const EventoAlunoPage = () => {
         { value: 2, text: "Meus eventos" },
     ]);
 
+
+
     const [notifyUser, setNotifyUser] = useState(); //Componente Notification
 
     const [tipoEvento, setTipoEvento] = useState("1"); //código do tipo do Evento escolhido É UMA STRING
     const [showSpinner, setShowSpinner] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [comentarios, setComentarios] = useState({})
-    const [idEvento, setIdEvento] = useState()
 
     // recupera os dados globais do usuário
     const { userData, setUserData } = useContext(UserContext);
+    // ID do Evento
+    const [idEvento, setIdEvento] = useState();
+    // Texto do comentário
+    const [comentario, setComentario] = useState();
+    // Texto do novo comentário a ser postado
+    const [novoComentario, setNovoComentario] = useState("");
+
+    // Id do comentário cadastrado
+    const [idComentario, setIdComentario] = useState();
+
+    useEffect(() => {
+        LoadEvents();
+    }, [tipoEvento, userData.UserId]);
+
 
     async function LoadEvents() {
         if (tipoEvento === "1") { // os eventos completos
             try {
                 // listar os aventos
-                const request = (await (await api.get(eventsResource)).data);
+                const todoEvento = (await (await api.get(eventsResource)).data);
+                const meuEvento = await (await api.get(`${presenceEventResource}/${userData.UserId}`)).data
+                const eventosMarcados = verificaPresença(todoEvento, meuEvento)
 
-                setEventos(request)
+                setEventos(eventosMarcados);
 
             } catch (error) {
-                alert("Erro em carregar todos os eventos ")
                 console.log(error);
             }
 
         }
-        else { //os eventos do aluno
+        else if (tipoEvento === "2") { //os eventos do aluno
             try {
                 // Listar os eventos do aluno
-                const retornoevento = (await (await api.get(`${presencesEventsResource}/${userData.UserId}`)).data);
+                const request = (await (await api.get(`${presenceEventResource}/${userData.UserId}`)).data);
 
                 const arrEventos = [];
 
-                retornoevento.data.forEach((e) => {
+                request.map((pr) => {
                     arrEventos.push({
-                        ...e.evento,
-                        situacao: e.situacao,
-                        idPresencaEvento: e.idPresencaEvento,
+                        ...pr.evento,
+                        situacao: true,
+                        idPresencaEvento: pr.idPresencaEvento
                     })
-                });
+                })
 
                 setEventos(arrEventos)
 
@@ -71,27 +86,82 @@ const EventoAlunoPage = () => {
             }
 
         }
+        else {
+            setEventos([]);
+        }
     }
 
-    useEffect(() => {
-        LoadEvents();
-        setEventos([])
-        setComentarios({})
-        
-    }, [tipoEvento]);
-    
-    const verificaPresenca = (arrAllEvents, eventsUser) => {
-        for (let x = 0; x < arrAllEvents.length; x++) {
-            for (let i = 0; i < eventsUser.length; i++) {
-                if (arrAllEvents[x].idEvento === eventsUser[i].idEvento) {
-                    arrAllEvents[x].situacao = true
 
-                }
+    function Aviso(key) { // 1 = Comentário pelo menos 3 char, 2 = exclusão, 3 = cadastro, 4= Atualização
+
+        switch (key) {
+
+            case 1:
+                setNotifyUser({
+                    titleNote: "Aviso",
+                    textNote: `O Comentário deve conter pelo menos 3 caracteres`,
+                    imgIcon: "warning",
+                    imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+                    showMessage: true
+                });
                 break;
-            }
+            case 2:
+                setNotifyUser({
+                    titleNote: "Sucesso",
+                    textNote: `Comentário excluído com sucesso`,
+                    imgIcon: "success",
+                    imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+                    showMessage: true
+                });
+                break;
+            case 3:
+                setNotifyUser({
+                    titleNote: "Sucesso",
+                    textNote: `Comentário cadastrado com sucesso`,
+                    imgIcon: "success",
+                    imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+                    showMessage: true
+                });
+                break;
+            case 4:
+                setNotifyUser({
+                    titleNote: "Sucesso",
+                    textNote: `Comentário atualizado com sucesso`,
+                    imgIcon: "success",
+                    imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+                    showMessage: true
+                });
+                break;
+            default:
+                setNotifyUser({
+                    titleNote: "Aviso",
+                    textNote: `${key}`,
+                    imgIcon: "warning",
+                    imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+                    showMessage: true
+                });
+                break;
+        }
+    }
 
+
+
+    const verificaPresença = (arrAllEvents, eventsUser) => {
+
+        for (let x = 0; x < arrAllEvents.length; x++) { //para cada evento
+
+            for (let i = 0; i < eventsUser.length; i++) { // procurar a corre
+
+                if (arrAllEvents[x].idEvento === eventsUser[i].idEvento) {
+
+                    arrAllEvents[x].situacao = true;
+                    arrAllEvents[x].idPresencaEvento = eventsUser[i].idPresencaEvento
+                    break; //paro de procurar para o evento principal atual
+                }
+            }
         }
 
+        return arrAllEvents;
     }
 
     // toggle meus eventos ou todos os eventos
@@ -99,48 +169,101 @@ const EventoAlunoPage = () => {
         setTipoEvento(tpEvent);
     }
 
-    const showHideModal = () => {
+    const showHideModal = (idEvento) => {
+
         setShowModal(showModal ? false : true);
-    };
 
-    const commentaryRemove = () => {
-
-    };
-    const postMyCommentary = () => {
-        alert("post o comentário");
-    };
-    async function loadMyCommentary(idComentary) {
-        const promise = await (await api.get(comentariosEventoResource).data)
-
-        setComentarios(promise)
-        console.log(comentarios);
-    };
-
-    async function handleConnect(eventId, whatTheFunction, presencaId = null) {
-        if (whatTheFunction === "connect") {
-            try {
-                const promise = await api.post(presencesEventsResource, {
-                    situacao: true,
-                    idUsuario: userData.userId,
-                    idEvento: eventId,
-                });
-                if (promise.status === 201) alert("conectado ao evento");
-
-                const todosEventos = await api.get(eventsResource);
-                setEventos(todosEventos.data);
-            } catch (error) { console.error(error); }
+        if (showModal) { //Um if para quando fecharmos o modal não fazer a requisição novamente
             return;
         }
-        try {
-            const unconnected = await api.delete(
-                `${presencesEventsResource}/${presencaId}`
-            );
-            if (unconnected.status === 204) {
-                const todosEventos = await api.get(eventsResource);
-                setEventos(todosEventos.data);
-            }
-        } catch (error) { console.error(error); }
+        setUserData({
+            ...userData,
+            idEvento: idEvento
+        })
+
+        setIdEvento(idEvento)
+
+        loadMyCommentary(idEvento);
+    };
+
+    // ler um comentário
+    async function loadMyCommentary(id) {
+
+        const request = await api.get(`${commentEventResource}/BuscarPorIdUsuario?idAluno=${userData.UserId}&idEvento=${id}`)
+
+        setComentario(request.data.descricao)
+        setIdComentario(request.data.idComentarioEvento)
     }
+
+    // Cadastra um comentário
+    async function postMyCommentary() {
+
+        const request = api.post(commentEventResource, {
+            descricao: novoComentario,
+            exibe: true,
+            idUsuario: userData.UserId,
+            idEvento: idEvento
+        });
+
+        const chamado = await api.get(`${commentEventResource}/BuscarPorIdUsuario?idAluno=${userData.UserId}&idEvento=${idEvento}`)
+
+        setComentario(novoComentario);
+        setNovoComentario("");
+        Aviso(3);
+    }
+
+    // remove o comentário
+    async function removeMyCommentary() {
+
+        try {
+            const request = await api.delete(`${commentEventResource}/${idComentario}`)
+
+            setComentario("Comentário Deletado!")
+
+            Aviso(2);
+
+        } catch (error) {
+            Aviso("Não há nada para se deletar!")
+        }
+
+    };
+
+    async function handleConnect(idEvento, whatTheFunction, presencaId = null) {
+
+        if (whatTheFunction === "connect") {
+            try {
+                const obj = {
+                    situacao: true,
+                    idUsuario: userData.UserId,
+                    idEvento: idEvento
+                }
+
+                const retorno = await api.post(presenceEventResource, obj)
+
+                if (retorno.status === 201 || retorno.status === 200 || retorno.status === 204) {
+                    LoadEvents();
+                }
+
+
+            } catch (error) {
+                alert(error)
+            }
+            return;
+        }
+
+        try {
+            const unconnected = await api.delete(`${presenceEventResource}/${presencaId}`);
+
+            if (unconnected.status === 201 || unconnected.status === 200 || unconnected.status === 204) {
+                LoadEvents();
+            }
+
+        } catch (error) {
+            alert("Erro na deleção da presença")
+            console.log(error)
+        }
+    }
+
     return (
         <>
             {/* Linha para a inclusão da notificação */}
@@ -173,9 +296,7 @@ const EventoAlunoPage = () => {
                     <Table
                         dados={eventos}
                         fnConnect={handleConnect}
-                        fnShowModal={() => {
-                            showHideModal();
-                        }}
+                        fnShowModal={showHideModal}
                     />
                 </Container>
             </MainContent>
@@ -187,9 +308,15 @@ const EventoAlunoPage = () => {
                 <Modal
                     userId={userData.userId}
                     showHideModal={showHideModal}
-                    fnDelete={commentaryRemove}
-                    fnGet={loadMyCommentary}
                     fnPost={postMyCommentary}
+                    fnDelete={removeMyCommentary}
+                    comentaryText={comentario}
+
+                    fnGet={loadMyCommentary}
+
+                    newComentary={novoComentario}
+                    setNewComentary={setNovoComentario}
+
                 />
             ) : null}
         </>

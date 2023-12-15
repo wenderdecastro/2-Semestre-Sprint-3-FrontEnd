@@ -1,29 +1,44 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import trashDelete from "../../assets/images/trash-delete-red.png";
 
 import { Button, Input } from "../FormComponents/FormComponents";
 import "./Modal.css";
+import { UserContext } from "../../context/AuthContext";
 
 const Modal = ({
   modalTitle = "Feedback",
   comentaryText = "Não informado. Não informado. Não informado.",
-  userId = null,
+  // userId = null,
   showHideModal = false,
-  fnDelete = null,
+  fnGet = null,
   fnPost = null,
-  fnGet = null
+  fnDelete = null
+  // idEvento = null
 
 }) => {
 
-  const [textoComentario, setTextoComentario] = useState()
+
+  useEffect(() => {
+    async function carregarDados() {
+      fnGet(userData.userId, userData.idEvento);
+    }
+    carregarDados();
+  }, [])
+
+  const [novoComentario, setNovoComentario] = useState()
+
+  const { userData } = useContext(UserContext)
+  console.clear()
+  console.log(userData);
+
 
   return (
     <div className="modal">
       <article className="modal__box">
-        
+
         <h3 className="modal__title">
           {modalTitle}
-          <span className="modal__close" onClick={()=> showHideModal(true)}>x</span>
+          <span className="modal__close" onClick={() => showHideModal(true)}>x</span>
         </h3>
 
         <div className="comentary">
@@ -42,17 +57,17 @@ const Modal = ({
 
         <Input
           placeholder="Escreva seu comentário..."
-          className="comentary__entry"
-          value={textoComentario}
+          additionalClass="comentary__entry"
           manipulatorFunction={(e) => {
-            setTextoComentario(e.target.value);
-        }}
+            setNovoComentario(e.target.value);
+          }}
+          value={novoComentario}
         />
 
         <Button
           textButton={"Comentar"}
-          className="comentary__button"
-          manipulatorFunction={fnPost} 
+          additionalClass="comentary__button"
+          manipulatorFunction={() => fnPost(userData.userId, userData.idEvento, true ,novoComentario)}
         />
       </article>
     </div>
