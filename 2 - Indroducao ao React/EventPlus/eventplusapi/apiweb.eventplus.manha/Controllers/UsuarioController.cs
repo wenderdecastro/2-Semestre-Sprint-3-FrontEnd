@@ -35,6 +35,21 @@ namespace apiweb.eventplus.manha.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult Get()
+        {
+            try
+            {
+                _usuarioRepository.Listar();
+
+                return StatusCode(201);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         [Authorize(Roles ="Administrador, Aluno")]
         public IActionResult GetWithId(Guid id)

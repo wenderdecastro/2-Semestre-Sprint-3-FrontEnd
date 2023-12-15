@@ -56,6 +56,36 @@ namespace apiweb.eventplus.manha.Repositories
             }
         }
 
+        public List<Usuario> Listar()
+        {
+            try
+            {
+                List<Usuario> listaUsuarios = _eventContext.Usuario
+                    .Select(u => new Usuario
+                    {
+                        IdUsuario = u.IdUsuario,
+                        Nome = u.Nome,
+                        Email = u.Email,
+                        TipoUsuario = new TipoUsuario
+                        {
+                            IdTipoUsuario = u.IdTipoUsuario,
+                            Titulo = u.TipoUsuario!.Titulo
+                        }
+                    }).ToList();
+
+                if (listaUsuarios != null)
+                {
+                    return listaUsuarios;
+                }
+                return null!;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public Usuario BuscarPorId(Guid id)
         {
             try
@@ -65,7 +95,7 @@ namespace apiweb.eventplus.manha.Repositories
                     {
                         IdUsuario = u.IdUsuario,
                         Nome = u.Nome,
-                        Email= u.Email,
+                        Email = u.Email,
                         TipoUsuario = new TipoUsuario
                         {
                             IdTipoUsuario = u.IdTipoUsuario,
